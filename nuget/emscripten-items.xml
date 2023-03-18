@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+  <ItemType Name="ClCompile" DisplayName="C/C++ compiler"/>
+  <ContentType Name="CppCode" DisplayName="C++ Code" ItemType="ClCompile"/>
+  <FileExtension Name=".cc" ContentType="CppCode"/>
+  <FileExtension Name=".c++" ContentType="CppCode"/>
+  <FileExtension Name=".cpp" ContentType="CppCode"/>
+  <FileExtension Name=".cxx" ContentType="CppCode"/>
+  
+  <ItemType Name="ClInclude" DisplayName="C/C++ header"/>
+  <ContentType Name="CppHeader" DisplayName="C/C++ Header" ItemType="ClInclude"/>
+  <FileExtension Name=".h" ContentType="CppHeader"/>
+  <FileExtension Name=".h++" ContentType="CppHeader"/>
+  <FileExtension Name=".hh" ContentType="CppHeader"/>
+  <FileExtension Name=".hpp" ContentType="CppHeader"/>
+  <FileExtension Name=".hxx" ContentType="CppHeader"/>
+  <FileExtension Name=".ipp" ContentType="CppHeader"/>
+
+</ProjectSchemaDefinitions>

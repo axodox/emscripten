@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Rule Name="ConfigurationGeneral" 
+      DisplayName="General"
+      PageTemplate="generic"
+      Description="General"
+      xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+  <Rule.Categories>
+    <Category Name="General" DisplayName="General Properties" Description="General properties" />
+  </Rule.Categories>
+
+  <Rule.DataSource>
+    <DataSource Persistence="ProjectFile" Label="Configuration" />
+  </Rule.DataSource>
+
+  <StringProperty Name="OutDir" DisplayName="Output Directory"
+                  Description="Path to where the compiled program will be placed. Can include environment variables."
+                  Category="General" 
+                  Subtype="folder"
+                  F1Keyword="VC.Project.VCConfiguration.OutputDirectory">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>
+  
+  <StringProperty Name="IntDir" DisplayName="Intermediate Directory"
+                  Description="Relative path to where intermediate build files (e.g. .o files) get generated. Can include environment variables."
+                  Category="General" 
+                  Subtype="folder"
+                  F1Keyword="VC.Project.VCConfiguration.IntermediateDirectory">
+    <StringProperty.DataSource>
+      <DataSource Persistence="ProjectFile" Label="" />
+    </StringProperty.DataSource>
+  </StringProperty>  
+</Rule>

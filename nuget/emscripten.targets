@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <AvailableItemName Include="ClCompile">
+      <Targets>Build</Targets>
+    </AvailableItemName>
+
+    <DebuggerPages Include="$(VCTargetsPath)$(LangID)\debugger_local_windows.xml" />
+
+    <PropertyPageSchema Condition="'@(DebuggerPages)' != ''" Include="$(VCTargetsPath)$(LangID)\debugger_general.xml" />
+    <PropertyPageSchema Include="@(DebuggerPages)"/>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Emscripten-Includes>$(VCInstallDir)Tools\MSVC\$(VCToolsVersion)\include;$(WindowsSdkDir)\Include\$(WindowsTargetPlatformVersion)\ucrt</Emscripten-Includes>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(Emscripten-Includes);$(Wasm-IncludeDirectories);$(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <Target Name="EnsureDirectories">
+    <MakeDir Directories="$(IntDir);$(OutDir)"/>
+  </Target>
+
+  <Target Name="CollectWasmSources">
+    <ItemGroup>
+      <WasmInclude Include="@(ClInclude)" Condition="'%(ClInclude.IncludeInWasm)' == 'true'"/>
+      <WasmCompile Include="@(ClCompile)" Condition="'%(ClCompile.IncludeInWasm)' == 'true'"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="BuildWasmObjects" Inputs="@(WasmCompile);@(WasmInclude)" Outputs="@(WasmCompile->'$(IntDir)%(Filename).o')" DependsOnTargets="EnsureDirectories;CollectWasmSources">
+    <ItemGroup>
+      <WasmObjects Include="@(WasmCompile->'$(IntDir)%(Filename).o')"/>
+      <WasmIncludeDirs Include="$(Wasm-IncludeDirectories)"/>
+      <WasmIncludeArgs Include="@(WasmIncludeDirs->'-I %(Identity)')"/>
+    </ItemGroup>
+
+    <Exec Command="$(Emscripten-Emcc) -O0 -std=c++20 -c @(WasmIncludeArgs, ' ') -o $(IntDir)%(WasmCompile.Filename).o %(WasmCompile.Identity)"/>
+  </Target>
+
+  <Target Name="Build" Inputs="@(WasmObjects)" Outputs="$(OutDir)$(TargetName).wasm;$(OutDir)$(TargetName).js" DependsOnTargets="BuildWasmObjects">
+    <Exec Command="$(Emscripten-Emcc) -O0 -o $(OutDir)$(TargetName).js @(WasmObjects, ' ')"/>
+  </Target>
+
+  <UsingTask TaskName="SetEnv" AssemblyFile="$(VCTargetsPath)Microsoft.Build.CppTasks.Common.dll"/>
+
+  <Target Name="ResolveReferences" Returns=""/>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.DesignTime.targets" />
+
+</Project>

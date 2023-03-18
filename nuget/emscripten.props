@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Common.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.WindowsSDK.props" />
+
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)emscripten-items.xml" />
+    
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)emscripten-general.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Emscripten-PythonPath>$(MSBuildThisFileDirectory)..\..\python\python.exe</Emscripten-PythonPath>
+    <Emscripten-EmccPath>$(MSBuildThisFileDirectory)..\..\emcc\emscripten\emcc.py</Emscripten-EmccPath>
+    <Emscripten-NodePath>$(MSBuildThisFileDirectory)..\..\node\bin\node.exe"</Emscripten-NodePath>
+    <Emscripten-Emcc>$(Emscripten-PythonPath) $(Emscripten-EmccPath)</Emscripten-Emcc>
+    <Emscripten-LibraryPath>$(MSBuildThisFileDirectory)..\..\emcc\emscripten\system\lib</Emscripten-LibraryPath>
+    <!-- <Emscripten-Includes>$(Emscripten-LibraryPath)\libc\musl\include;$(Emscripten-LibraryPath)\libcxx\include</Emscripten-Includes> -->
+    <Wasm-IncludeAllFilesByDefault>true</Wasm-IncludeAllFilesByDefault>
+    <Wasm-IncludeDirectories></Wasm-IncludeDirectories>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IntDir>$(ProjectDir)obj\</IntDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
+    <CurrentVCTargetsPath>$(VCTargetsPath)</CurrentVCTargetsPath>
+    <TargetName>$(ProjectName)</TargetName>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>$(Emscripten-NodePath)</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>$(TargetName).js</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(OutDir)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <IncludeInWasm>$(Wasm-IncludeAllFilesByDefault)</IncludeInWasm>
+      <PreprocessorDefinitions>__EMSCRIPTEN__;$(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+
+    <ClInclude>
+      <IncludeInWasm>$(Wasm-IncludeAllFilesByDefault)</IncludeInWasm>
+    </ClInclude>
+  </ItemDefinitionGroup>
+
+</Project>
